@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 gcc corvid_toes.c src/board.c src/move_gen.c src/eval.c src/search.c -Iincludes -o corvid_toes ; ./corvid_toes.exe - for powershell
+=======
+gcc corvid_toes.c src/board.c src/move_gen.c src/eval.c src/search.c -Iincludes -o corvid_toes ; ./corvid_toes.exe - for powershell
+>>>>>>> ea3f0ab (Init)
 gcc corvid_toes.c src/board.c src/move_gen.c src/eval.c src/search.c -Iincludes -o corvid_toes && ./corvid_toes.exe - for cmd
