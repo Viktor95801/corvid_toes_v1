@@ -89,7 +89,6 @@ int main(){
                 printf("Draw!\n");
                 end = true; // Game ends in a draw
             } else {
-                side = !side;
                 negaMax(7, b, &current_move);
                 make_move(current_move, &b);
                 print_board(&b);
