@@ -3,6 +3,8 @@
         "*.dart": "dart",
         "*.nelua": "nelua",
         "stdint.h": "c",
-        "board_utils.h": "c"
+        "board_utils.h": "c",
+        "eval.h": "c",
+        "stdio.h": "c"
     }
 }
