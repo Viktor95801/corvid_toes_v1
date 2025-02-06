@@ -23,7 +23,7 @@ typedef struct {
 } move;
 
 
-void make_move(move m, board* b);
+void make_move(move* m, board* b);
 void unmake_move(move m, board* b);
 bool side;
 

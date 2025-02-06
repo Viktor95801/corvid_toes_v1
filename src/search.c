@@ -27,7 +27,7 @@ int8_t negaMax(int8_t depth, board b, move* to_make) {
 
     for (uint8_t i = 0; i < moves.count; i++) {
         move m = moves.moves[i];
-        make_move(m, &b);                                  // Make the move
+        make_move(&m, &b);                                  // Make the move
 
         int8_t score = -negaMax(depth - 1, b, NULL);
         unmake_move(m, &b);

@@ -24,17 +24,18 @@ void cache_win_pos() {
     win_pos[7] = 0b001010100;
 }
 
-void make_move(move m, board* b) {
-    if (m.side) { // if side is true then X moves. Update X's position
-        b->x |= (1 << m.square);
+void make_move(move* m, board* b) {
+    if (m->side) { // if side is true then X moves. Update X's position
+        b->x |= (1 << m->square);
     } else { // side is false then O moves. update O's position.
-        b->o |= (1 << m.square);
+        b->o |= (1 << m->square);
     }
     side = !side;  // Toggle the side *after* making the move!!!
     return;
 }
 
 void unmake_move(move m, board* b) {
+    m.side = !m.side;
     if (m.side) {
         b->x &= ~(1 << m.square);
     } else {

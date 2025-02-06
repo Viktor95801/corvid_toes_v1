@@ -12,6 +12,34 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+bool user_side() {
+    char input[255];
+    while (true) {
+        printf("Do you want to go first? (y/n, 'q' to quit): ");
+        
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            exit(1);
+        }
+        input[strcspn(input, "\n")] = 0; // Remove trailing newline
+        
+        if (strlen(input) != 1) {
+            printf("Invalid input. Please enter 'y' or 'n'.");
+            continue;
+        }
+
+        if (strcmp(input, "q") == 0) {
+            exit(0);
+        }
+
+        if (input[0] == 'y') {
+            return true;
+        } else if (input[0] == 'n') {
+            return false;
+        } else {
+            printf("Invalid input. Please enter 'y' or 'n'.");
+        }
+    }
+}
 move user_input(board b) {
     char input[255];
     move m = {0, 0, 1}; // Initialize to an invalid move
@@ -64,60 +92,60 @@ move user_input(board b) {
 }
 
 
-int main(){
+int main () {
+    bool end = false;
+    board b;
+    b.o = 0;
+    b.x = 0;
     cache_win_pos();
-    board b = {0, 0};
-    print_board(&b);
+    bool who_play_first = user_side();
+    move m;
 
-    bool end = false; 
-
-    while (!end) {
-        move_list moves; 
-        move current_move;
-
-        if (side) {
-            current_move = user_input(b);
-            make_move(current_move, &b);
-            print_board(&b); 
-        } else { // AI's turn
-            moves = valid_moves(b);
-            //Check for errors or draws *before* making a move
-            if (moves.error) {
-                fprintf(stderr, "Error generating moves\n");
-                return 1;
-            } else if (moves.count == 0) {
-                printf("Draw!\n");
-                end = true; // Game ends in a draw
-            } else {
-                negaMax(7, b, &current_move);
-                make_move(current_move, &b);
-                print_board(&b);
-
-
-                // Check for AI win *immediately* after AI moves.
-                for (uint8_t j = 0; j < 8; j++) {
-                    if ((b.x & win_pos[j]) == win_pos[j]) {
-                        printf("X wins\n");
-                        end = true;
-                        break;
-                    }
-                    if ((b.o & win_pos[j]) == win_pos[j]) {
-                        printf("O wins\n");
-                        end = true;
-                        break;
-                    }
-                }
-            }
-
-
-            if (moves.moves != NULL) {        
-                free(moves.moves);
+    if (!who_play_first) {
+        m = gen_move(B2, side, b);
+        if (m.invalid) {
+            fprintf(stderr, "Internal error.\n");
+            exit(1);
+        }
+        make_move(&m, &b);
+        print_board(&b);
+    }
+    while (end == false) {
+        // end conditions
+        move_list moves = valid_moves(b);
+        if (moves.count == 0) {
+            printf("Draw!\n");
+            end = true;
+            break;
+        }
+        free(moves.moves);
+        
+        for (uint8_t i = 0; i < 8; i++) {
+            if ((b.x & win_pos[i]) == win_pos[i]) {
+                printf("X wins!\n");
+                end = true;
+                break;
+            } else if ((b.o & win_pos[i] == win_pos[i])) {
+                printf("O wins!\n");
+                end = true;
+                break;
             }
         }
 
+        // User logic
+
+        print_board(&b);
+        m = user_input(b);
+        make_move(&m, &b);
+/*         m.side = !m.side; */
+
+        // AI logic
+        
+        negaMax(7, b, &m);
+        make_move(&m, &b);
+/*         m.side = !m.side; */
+        print_board(&b);
 
     }
-
     return 0;
 }
-
