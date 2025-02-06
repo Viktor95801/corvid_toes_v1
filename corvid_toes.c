@@ -108,12 +108,27 @@ int main () {
             exit(1);
         }
         make_move(&m, &b);
-        print_board(&b);
+        print_board(&b); // Print after AI's first move if it goes first
     }
+
     while (end == false) {
-        // end conditions
+
+        // User input
+        print_board(&b);
+        m = user_input(b);
+        make_move(&m, &b);
+
+
+        // AI logic (Make AI move *before* checking for win/draw and printing!)
+        negaMax(7, b, &m); 
+        make_move(&m, &b);
+
+
+
+        // End conditions and printing  (Moved after the AI move)
         move_list moves = valid_moves(b);
         if (moves.count == 0) {
+            print_board(&b); // Print before declaring a draw
             printf("Draw!\n");
             end = true;
             break;
@@ -122,29 +137,19 @@ int main () {
         
         for (uint8_t i = 0; i < 8; i++) {
             if ((b.x & win_pos[i]) == win_pos[i]) {
+                print_board(&b); // Print before declaring X wins
                 printf("X wins!\n");
                 end = true;
                 break;
-            } else if ((b.o & win_pos[i] == win_pos[i])) {
+            } else if ((b.o & win_pos[i]) == win_pos[i]) {
+                print_board(&b); // Print before declaring O wins
                 printf("O wins!\n");
                 end = true;
                 break;
             }
         }
+        print_board(&b); // Print after each full turn (user + AI)
 
-        // User logic
-
-        print_board(&b);
-        m = user_input(b);
-        make_move(&m, &b);
-/*         m.side = !m.side; */
-
-        // AI logic
-        
-        negaMax(7, b, &m);
-        make_move(&m, &b);
-/*         m.side = !m.side; */
-        print_board(&b);
 
     }
     return 0;

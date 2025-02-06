@@ -18,31 +18,31 @@ int8_t negaMax(int8_t depth, board b, move* to_make) {
     move_list moves = valid_moves(b);
     if (moves.error) {
         fprintf(stderr, "Memory allocation failed in negaMax!\n");
-        exit(1); // Or another way to handle memory errors
+        exit(1); 
     }
 
     int8_t best_score = -128;
-    move best_move = {0, 0, 1}; // Initialize to an invalid move
-
+    move best_move = {0, 0, 1}; 
 
     for (uint8_t i = 0; i < moves.count; i++) {
         move m = moves.moves[i];
-        make_move(&m, &b);                                  // Make the move
 
+
+        make_move(&m, &b);  
         int8_t score = -negaMax(depth - 1, b, NULL);
+
         unmake_move(m, &b);
+
 
         if (score > best_score) {
             best_score = score;
             best_move = m;
-             if (to_make != NULL) {
+            if (to_make != NULL) {
                 *to_make = m;
             }
         }
     }
 
-
     free(moves.moves);
-
     return best_score;
 }
